@@ -1,3 +1,5 @@
 # RingDetection
 
-[![Build Status](https://github.com/mastrof/RingDetection.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/mastrof/RingDetection.jl/actions/workflows/CI.yml?query=branch%3Amain)
+- Fine-tune detection parameters with interactive GLMakie-based GUI
+- Detect rings using Images.jl's Hough transform.
+- Polish detections using mass-based filtering
