@@ -1,6 +1,6 @@
-using DiskDetection
+using RingDetection
 using Test
 
-@testset "DiskDetection.jl" begin
+@testset "RingDetection.jl" begin
     # Write your tests here.
 end
