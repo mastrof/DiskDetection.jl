@@ -4,9 +4,34 @@ using ImageFeatures
 using Images
 using TiffImages
 using StatsBase
+using ParticleTracking
+using GeometryBasics: Point
+
+#== Blob interface ==#
+export Ring, radius, location, location_raw
+
+struct Ring{T} <: ParticleTracking.AbstractBlob{T,Nothing,2}
+    location::Point{2,T}
+    location_raw::CartesianIndex{2}
+    radius::T
+end
+function Ring(c::CartesianIndex{2}, r)
+    Ring{Float64}(Point{2,Float64}(c.I), c, Float64(r))
+end
+function Base.show(io::IO, ring::Ring)
+    x, y = location(ring)
+    r = radius(ring)
+    print(io, "Ring(x=$(x), y=$(y), r=$(r))")
+end
+ParticleTracking.radius(r::Ring) = r.radius
+ParticleTracking.location_raw(r::Ring) = r.location_raw
+for f in (zeroth_moment, second_moment, amplitude, intensity_map, scale)
+    fs = nameof(f)
+    @eval ParticleTracking.$fs(r::Ring{T}) where T = zero(T)
+end
+
 
 #== Core ==#
-
 export imgread, sharpen, detect_rings
 
 function imgread(fname::AbstractString; rotate=true, T=Float64)
@@ -63,7 +88,8 @@ function detect_rings(img::AbstractMatrix, radii::AbstractVector;
     )
     centers = first(hough)[idx_save]
     radii = last(hough)[idx_save]
-    centers, radii
+    # centers, radii
+    [Ring(c, r) for (c, r) in zip(centers, radii)]
 end
 
 #== Interactive GUI if GLMakie available ==#
