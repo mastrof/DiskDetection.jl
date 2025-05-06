@@ -7,12 +7,10 @@ using StatsBase
 using ParticleTracking
 using GeometryBasics: Point
 
-#== Blob interface ==#
+#== Tracking interface ==#
 export Ring, radius, location, location_raw
 
-#HACK:NTuple{2,T} is required due to
-#current behavior of ParticleTracking.evaluate_maxcost!
-struct Ring{T} <: ParticleTracking.AbstractBlob{T,NTuple{2,T},2}
+struct Ring{T} <: ParticleTracking.AbstractBlob{T,Nothing,2}
     location::Point{2,T}
     location_raw::CartesianIndex{2}
     radius::T
@@ -30,6 +28,22 @@ ParticleTracking.location_raw(r::Ring) = r.location_raw
 for f in (zeroth_moment, second_moment, amplitude, intensity_map, scale)
     fs = nameof(f)
     @eval ParticleTracking.$fs(r::Ring{T}) where T = zero(T)
+end
+
+"""
+    evaluate_maxcost(T, maxdist, dt, cost; kwargs...)
+Evaluate the maximum allowed cost for a link if the maximum allowed
+distance is `maxdist` pixels and the time difference `dt` frames.
+"""
+function ParticleTracking.evaluate_maxcost(::Type{<:Ring{T}},
+    maxdist::Real, dt::Integer, cost::Function; kwargs...
+) where {T}
+    # define two dummy blobs maxdist apart and evaluate their linking cost
+    posA = ntuple(_ -> 0, N)
+    posB = ntuple(i -> i==1 ? ceil(Int, maxdist) : 0, N)
+    A = Ring(CartesianIndex(posA), 0)
+    B = Ring(CartesianIndex(posB), 0)
+    return cost(A, B; kwargs...)
 end
 
 
