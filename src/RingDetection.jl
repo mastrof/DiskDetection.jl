@@ -10,7 +10,9 @@ using GeometryBasics: Point
 #== Blob interface ==#
 export Ring, radius, location, location_raw
 
-struct Ring{T} <: ParticleTracking.AbstractBlob{T,Nothing,2}
+#HACK:NTuple{2,T} is required due to
+#current behavior of ParticleTracking.evaluate_maxcost!
+struct Ring{T} <: ParticleTracking.AbstractBlob{T,NTuple{2,T},2}
     location::Point{2,T}
     location_raw::CartesianIndex{2}
     radius::T
