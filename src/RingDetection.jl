@@ -39,8 +39,8 @@ function ParticleTracking.evaluate_maxcost(::Type{<:Ring{T}},
     maxdist::Real, dt::Integer, cost::Function; kwargs...
 ) where {T}
     # define two dummy blobs maxdist apart and evaluate their linking cost
-    posA = ntuple(_ -> 0, N)
-    posB = ntuple(i -> i==1 ? ceil(Int, maxdist) : 0, N)
+    posA = ntuple(_ -> 0, 2)
+    posB = ntuple(i -> i==1 ? ceil(Int, maxdist) : 0, 2)
     A = Ring(CartesianIndex(posA), 0)
     B = Ring(CartesianIndex(posB), 0)
     return cost(A, B; kwargs...)
