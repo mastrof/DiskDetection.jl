@@ -4,7 +4,6 @@ using .GLMakie
 
 function tune_ring_detection(
     img::AbstractMatrix;
-    preprocess=sharpen,
     colormap=:bone,
     ring_strokecolor=:red,
     ring_strokewidth=1,
@@ -18,11 +17,12 @@ function tune_ring_detection(
     hidedecorations!(ax)
     # controls
     sg1 = SliderGrid(fig[5,1],
+        (label="α threshold", range=1.05:0.05:2, startvalue=1.05),
         (label="min radius", range=1:50, startvalue=2),
         (label="max radius", range=1:50, startvalue=10),
         (label="σ canny", range=1:0.1:20, startvalue=1)
     )
-    rmin, rmax, σ = [s.value for s in sg1.sliders]
+    α, rmin, rmax, σ = [s.value for s in sg1.sliders]
     sg2 = SliderGrid(fig[5,2],
         (label="min distance", range=1:50, startvalue=10),
         (label="vote threshold", range=1:50, startvalue=1),
@@ -30,10 +30,10 @@ function tune_ring_detection(
     )
     min_dist, vote_threshold, β = [s.value for s in sg2.sliders]
     # get rings
-    img_pro = sharpen(img)
+    img_pro = @lift(sharpen(img; α=$α))
     hough = @lift(
         detect_rings(
-            img_pro, ($rmin):($rmax);
+            $img_pro, ($rmin):($rmax);
             σ=$σ,
             min_dist=$min_dist,
             vote_threshold=$vote_threshold,
@@ -53,6 +53,7 @@ function tune_ring_detection(
     # output parameter values on exit
     on(events(fig.scene).keyboardbutton) do event
         if !isopen(fig.scene)
+            println("α = $(α[])")
             println("range_radii = $(rmin[]):$(rmax[])")
             println("σ = $(σ[])")
             println("min_dist = $(min_dist[])")
