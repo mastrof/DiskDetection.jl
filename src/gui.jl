@@ -4,6 +4,7 @@ using .GLMakie
 
 function tune_ring_detection(
     img::AbstractMatrix;
+    fout::AbstractString="",
     colormap=:bone,
     ring_strokecolor=:red,
     ring_strokewidth=1,
@@ -53,15 +54,18 @@ function tune_ring_detection(
     # output parameter values on exit
     on(events(fig.scene).keyboardbutton) do event
         if !isopen(fig.scene)
-            println("α = $(α[])")
-            println("range_radii = $(rmin[]):$(rmax[])")
-            println("σ = $(σ[])")
-            println("min_dist = $(min_dist[])")
-            println("vote_threshold = $(vote_threshold[])")
-            println("β = $(β[])")
+            io = isempty(fout) ? stdout : open(fout, "w")
+            println(io, "α = $(α[])")
+            println(io, "range_radii = $(rmin[]):$(rmax[])")
+            println(io, "σ = $(σ[])")
+            println(io, "min_dist = $(min_dist[])")
+            println(io, "vote_threshold = $(vote_threshold[])")
+            println(io, "β = $(β[])")
+            !isempty(fout) && close(io)
             put!(channel, true)
         end
     end
     display(fig)
     take!(channel)
+    return
 end
