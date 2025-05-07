@@ -8,6 +8,7 @@ using ParticleTracking
 using GeometryBasics: Point
 
 include("tracking_interface.jl")
+include("utils.jl")
 
 #== Core ==#
 export imgread, sharpen, detect_rings

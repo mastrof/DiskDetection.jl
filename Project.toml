@@ -1,7 +1,7 @@
 name = "RingDetection"
 uuid = "72f87620-1546-45cd-8031-1f00e49166d6"
 authors = ["Riccardo Foffi <rfoffi@ethz.ch> and contributors"]
-version = "0.2.1"
+version = "0.2.2"
 
 [deps]
 GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
