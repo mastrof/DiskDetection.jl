@@ -9,27 +9,10 @@ using GeometryBasics: Point
 
 include("tracking_interface.jl")
 include("utils.jl")
+include("preprocess.jl")
 
 #== Core ==#
-export imgread, sharpen, detect_rings
-
-function imgread(fname::AbstractString; rotate=true, T=Float64)
-    if rotate
-        rotr90(T.(TiffImages.load(fname)))
-    else
-        T.(TiffImages.load(fname))
-    end
-end
-
-function safeslice(M, i, j, r)
-    si, sj = size(M)
-    R = r+1
-    imin = max(1, i-R)
-    imax = min(si, i+R)
-    jmin = max(1, j-R)
-    jmax = min(sj, j+R)
-    @view M[imin:imax, jmin:jmax]
-end
+export detect_rings
 
 function sharpen(img::AbstractMatrix; α::Real=1.05, σ::Real=1, w::Integer=3)
     med = median(img)
