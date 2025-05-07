@@ -2,6 +2,8 @@ export tune_preprocessing, tune_ring_detection
 
 using .GLMakie
 
+# TODO: this function is of much broader utility,
+# should be moved to its own self-contained package
 """
     tune_preprocessing(img, preprocess, args; fout, colormap, layout)
 
