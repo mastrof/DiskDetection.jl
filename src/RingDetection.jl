@@ -8,12 +8,14 @@ using ParticleTracking
 
 include("tracking_interface.jl")
 include("utils.jl")
-include("preprocess.jl")
 
 #== Core ==#
 export detect_rings
 
-function detect_rings(vid::AbstractVector, radii::AbstractVector; kwargs...)
+function detect_rings(
+    vid::AbstractVector, radii::AbstractVector;
+    kwargs...
+)
     map(img -> detect_rings(img, radii; kwargs...), vid)
 end
 function detect_rings(img::AbstractMatrix, radii::AbstractVector;

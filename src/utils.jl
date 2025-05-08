@@ -1,12 +1,4 @@
-export imgread, safeslice
-
-function imgread(fname::AbstractString; rotate=true, T=Float64)
-    if rotate
-        rotr90(T.(TiffImages.load(fname)))
-    else
-        T.(TiffImages.load(fname))
-    end
-end
+export safeslice
 
 function safeslice(M, i, j, r)
     si, sj = size(M)
