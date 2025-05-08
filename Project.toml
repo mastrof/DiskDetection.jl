@@ -1,10 +1,9 @@
 name = "RingDetection"
 uuid = "72f87620-1546-45cd-8031-1f00e49166d6"
 authors = ["Riccardo Foffi <rfoffi@ethz.ch> and contributors"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
-GLMakie = "e9467ef8-e4e7-5192-8a1a-b1aee30e663a"
 ImageEdgeDetection = "2b14c160-480b-11ea-1b58-656063328ff7"
 ImageFeatures = "92ff4b2b-8094-53d3-b29d-97f740f06cef"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
@@ -14,7 +13,6 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 TiffImages = "731e570b-9d59-4bfa-96dc-6df516fadf69"
 
 [compat]
-GLMakie = ">= 0.10"
 ImageEdgeDetection = ">= 0.1.8"
 ImageFeatures = ">= 0.5"
 Images = ">= 0.26"
