@@ -169,7 +169,7 @@ function tune_ring_detection(
         )
     )
     rings = @lift([
-        Circle(location(ring), radius(ring)) for ring in $hough
+        Circle(Point2f(location(ring)), radius(ring)) for ring in $hough
     ])
     # display
     heatmap!(ax, img_pro; colormap)
