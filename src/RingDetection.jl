@@ -8,6 +8,7 @@ using ParticleTracking
 
 include("tracking_interface.jl")
 include("utils.jl")
+include("hough.jl")
 
 #== Core ==#
 export detect_rings

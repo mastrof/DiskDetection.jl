@@ -1,7 +1,7 @@
 name = "RingDetection"
 uuid = "72f87620-1546-45cd-8031-1f00e49166d6"
 authors = ["Riccardo Foffi <rfoffi@ethz.ch> and contributors"]
-version = "0.3.1"
+version = "0.3.2"
 
 [deps]
 ImageEdgeDetection = "2b14c160-480b-11ea-1b58-656063328ff7"
