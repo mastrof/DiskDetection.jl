@@ -5,48 +5,12 @@ using Images
 using TiffImages
 using StatsBase
 using ParticleTracking
+using GeometryBasics
 
+#== Core ==#
 include("tracking_interface.jl")
 include("utils.jl")
 include("hough.jl")
-
-#== Core ==#
-export detect_rings
-
-function detect_rings(
-    vid::AbstractVector, radii::AbstractVector;
-    kwargs...
-)
-    map(img -> detect_rings(img, radii; kwargs...), vid)
-end
-function detect_rings(img::AbstractMatrix, radii::AbstractVector;
-    σ::Real=1.2, # smoothing size for Canny
-    hi::Real=99, lo::Real=50, # percentile thresholds for Canny
-    k=Kernel.ando5, # kernel for gradient evaluation
-    min_dist::Real=minimum(radii), # minimal distance between rings
-    vote_threshold::Integer=1, # Hough voting threshold
-    R::Integer=0, β::Real=5, # filtering
-)
-    # canny edge detection
-    img_edges = canny(img, (Percentile(hi), Percentile(lo)), σ)
-    # phase of image gradient
-    dx, dy = imgradients(img, k)
-    img_phase = phase(dx, dy)
-    # find rings
-    hough = hough_circle_gradient(img_edges, img_phase, radii;
-        min_dist, vote_threshold
-    )
-    # filter out rings without a central bright spot
-    m = mean(img) #WARN:this may not be a good metric in general
-    idx_save = findall(
-        c -> mean(safeslice(img, c.I..., R)) > β*m,
-        first(hough)
-    )
-    centers = first(hough)[idx_save]
-    radii = last(hough)[idx_save]
-    # centers, radii
-    [Ring(c, r) for (c, r) in zip(centers, radii)]
-end
 
 #== Interactive GUI if GLMakie available ==#
 using Requires

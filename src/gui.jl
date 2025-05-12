@@ -84,33 +84,29 @@ function tune_hough(
     # controls
     sg1 = SliderGrid(fig[5,1],
         (label="min radius", range=1:50, startvalue=2),
-        (label="max radius", range=1:50, startvalue=10),
-        (label="σ canny", range=1:0.1:20, startvalue=1)
+        (label="max radius", range=1:50, startvalue=20),
+        (label="σ canny", range=1:0.1:20, startvalue=2)
     )
     rmin, rmax, σ = [s.value for s in sg1.sliders]
     sg2 = SliderGrid(fig[5,2],
         (label="min distance", range=1:50, startvalue=10),
-        (label="vote threshold", range=1:50, startvalue=1),
+        (label="min votes", range=1:50, startvalue=4),
+        (label="vote threshold", range=0:2π, startvalue=π/6),
     )
-    min_dist, vote_threshold = [s.value for s in sg2.sliders]
+    min_dist, min_votes, vote_threshold = [s.value for s in sg2.sliders]
     # get rings
-    hough = @lift(
-        hough_accumulator(
+    rings = @lift(
+        detect_rings(
             img, ($rmin):($rmax);
             σ=$σ,
             min_dist=$min_dist,
             vote_threshold=$vote_threshold,
-        )
+        )[1]
     )
-    A = @lift([x > 0.0 ? x : NaN for x in $hough[end]])
-    rings = @lift([
-        Circle(Point2f(c.I), r)
-        for (c, r) in zip($hough[1], $hough[2])
-    ])
+    circles = @lift(Circle.($rings))
     # display
     heatmap!(ax, img; colormap)
-    heatmap!(ax, A; colormap=:bone)
-    poly!(ax, rings;
+    poly!(ax, circles;
         color=:transparent,
         strokecolor=ring_strokecolor,
         strokewidth=ring_strokewidth
