@@ -55,7 +55,7 @@ end
 function hough_accumulator(
     img_edges::AbstractArray{Bool,2},
     img_phase::AbstractArray{<:Number,2},
-    radii::AbstractRange{<:Integer}
+    radii::AbstractVector{<:Integer}
 )
     rows, cols = size(img_edges)
     nradii = length(radii)
@@ -78,9 +78,9 @@ function hough_accumulator(
         end
     end
     # HACK:
-    # smoothing seems necessary to improve search of maxima
-    # but this is likely suboptimal and may need better control
-    return imfilter(accumulator, Kernel.gaussian((1,1,1)))
+    # heavy on performance but seems to improve detection a lot
+    return imfilter(accumulator, Kernel.gaussian((0.5,0.5,0.5)))
+    # accumulator
 end
 
 function vote!(acc, x, y, r)
@@ -126,8 +126,8 @@ function find_ring_candidates(accumulator, accumulator_proc, min_dist)
     d = max(3, min_dist)
     # WARN:
     # this is not really a minimum distance
-    # it is only a min distance between similar-radius (±2) objects
-    window = (d, d, 5)
+    # it is only a min distance between similar-radius objects
+    window = (d, d, 11)
     sort(
         findlocalmaxima(accumulator_proc; window);
         # sort by vote and radius
