@@ -21,12 +21,12 @@ using a variation of the Hough circle transform.
 """
 function detect_rings(
     img::AbstractMatrix, radii::AbstractVector{<:Integer};
-    σ::Real=1.2, # smoothing size for Canny
-    hi::Real=99, lo::Real=50, # percentile thresholds for Canny
-    k=KernelFactors.ando5, # kernel for gradient evaluation
-    min_dist::Integer=minimum(radii), # minimal distance between rings
-    min_votes::Integer=1, # minimum votes for hotspots
-    vote_threshold::Real=π/4, # fractional threshold (0,2π) for rings
+    σ::Real=1.2,
+    hi::Real=99, lo::Real=50,
+    k=KernelFactors.ando5,
+    min_dist::Integer=minimum(radii),
+    min_votes::Integer=1,
+    vote_threshold::Real=π/4,
 )
     # evaluate edges and phase of input image
     img_edges = canny(img, Percentile.((hi, lo)), σ)
