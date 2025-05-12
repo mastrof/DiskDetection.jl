@@ -100,6 +100,7 @@ function tune_hough(
             img, ($rmin):($rmax);
             σ=$σ,
             min_dist=$min_dist,
+            min_votes=$min_votes,
             vote_threshold=$vote_threshold,
         )[1]
     )
