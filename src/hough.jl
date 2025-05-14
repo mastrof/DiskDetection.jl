@@ -127,7 +127,7 @@ function find_ring_candidates(accumulator, accumulator_proc, min_dist)
     # WARN:
     # this is not really a minimum distance
     # it is only a min distance between similar-radius objects
-    window = (d, d, 11)
+    window = (d, d, 5)
     sort(
         findlocalmaxima(accumulator_proc; window);
         # sort by vote and radius
